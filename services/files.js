@@ -24,3 +24,25 @@ exports.getOneFile = (req, res, next) => {
     .then(file => res.status(200).json(file))
     .catch(error => res.status(404).json({ error }));
 };
+
+exports.modifyOneFile = (req, res, next) => {
+
+    const file = new File({
+        name: req.file.filename,
+        description: req.body.description,
+        imageUrl: `${req.protocol}://localhost:3000/uploads/${req.file.filename}`,
+        userId: req.body.userId        
+    });
+
+    File.findOne({_id: req.params.id})
+        .then((thing) => {
+            if(file.userId == thing.userId){
+                File.updateOne({ _id: req.params.id}, { ...file, _id: req.params.id})
+                .then(() => res.status(200).json({message : 'Objet modifié!'}))
+                .catch(error => res.status(401).json({ error }));
+            }
+        })
+        .catch((error) => {
+            res.status(400).json({ error });
+        });
+};
