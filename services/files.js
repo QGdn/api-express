@@ -46,3 +46,19 @@ exports.modifyOneFile = (req, res, next) => {
             res.status(400).json({ error });
         });
 };
+
+exports.deleteOneFile = (req, res, next) => {
+    File.findOne({ _id: req.body.id})
+    .then(file => {
+            const filename = file.imageUrl.split('/uploads')[1];
+            fs.unlink(`uploads/${filename}`, () => {
+                File.deleteOne({_id: req.body.id})
+                    .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
+                    .catch(error => res.status(401).json({ error }));
+            });
+        }
+    )
+    .catch( error => {
+        res.status(500).json({ error });
+    });
+};
