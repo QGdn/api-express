@@ -1,21 +1,13 @@
 const express = require('express');
-
 const router = express.Router();
+const multer = require('multer');
+const { storage } = require('../middlewares/files-storage');
+const filesService = require('../services/files');
 
-const service = require('../services/files');
+// Configuration de multer pour l'upload de fichiers
+const upload = multer({ storage: storage });
 
-const multer = require('../middlewares/files-storage');
-
-const private = require('../middlewares/private');
-
-router.get('/', private.checkJWT, service.getAllFiles);
-
-router.post('/', multer.single('upload_file'), service.createOneFile);
-
-router.get('/:id', private.checkJWT, service.getOneFile);
-
-router.put('/:id', private.checkJWT, multer, service.modifyOneFile);
-
-router.delete('/delete', private.checkJWT, service.deleteOneFile);
+// Route pour gérer l'upload de fichier
+router.post('/', upload.single('upload_file'), filesService.createOneFile);
 
 module.exports = router;

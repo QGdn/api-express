@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
 const clientOptions = {
-    dbName : 'apinode'
+    dbName: 'apinode'
 };
 
-exports.initClientDbConnection = async () => {
+exports.initClientConnection = async () => {
     try {
-        await mongoose.connect(process.env.URL_MONGO, clientOptions)
-        console.log('Connected');
+        await mongoose.connect(process.env.URL_MONGO, clientOptions);
+        console.log('Connexion MongoDB effectuée');
     } catch (error) {
-        console.log(error);
+        console.error('Erreur de connexion MongoDB :', error);
         throw error;
     }
-}
+};
